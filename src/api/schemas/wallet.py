@@ -22,3 +22,4 @@ class WalletBalance(BaseModel):
 
 class WalletDeposit(BaseModel):
     amount: Decimal = Field(..., gt=0)
+    idempotency_key: str = Field(..., min_length=1, max_length=100)

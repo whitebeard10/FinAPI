@@ -145,7 +145,7 @@ async def test_wallet_deposit(client: AsyncClient, db_session):
     # Deposit 500
     deposit_res = await client.post(
         f"/api/v1/wallet/{wallet_id}/deposit",
-        json={"amount": 500.0},
+        json={"amount": 500.0, "idempotency_key": "deposit-test-key"},
         headers=headers
     )
     assert deposit_res.status_code == 200
@@ -162,7 +162,7 @@ async def test_transaction_history(client: AsyncClient, db_session):
     source_id = res1.json()["id"]
     
     # Add balance
-    await client.post(f"/api/v1/wallet/{source_id}/deposit", json={"amount": 1000.0}, headers=headers)
+    await client.post(f"/api/v1/wallet/{source_id}/deposit", json={"amount": 1000.0, "idempotency_key": "history-deposit-key"}, headers=headers)
     
     res2 = await client.post("/api/v1/wallet/create", json={"currency": "USD"}, headers=headers)
     dest_id = res2.json()["id"]
@@ -179,9 +179,9 @@ async def test_transaction_history(client: AsyncClient, db_session):
             headers=headers
         )
     
-    # Check history
+    # Check history (1 deposit + 3 transfers = 4 total)
     history_res = await client.get("/api/v1/transactions/history", headers=headers)
     assert history_res.status_code == 200
     data = history_res.json()
-    assert data["total"] == 3
-    assert len(data["items"]) == 3
+    assert data["total"] == 4
+    assert len(data["items"]) == 4
