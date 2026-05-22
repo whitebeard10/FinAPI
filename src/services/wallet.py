@@ -1,5 +1,6 @@
 import uuid
 from typing import List
+from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.models import Wallet, User
 from src.repositories.wallet import WalletRepository
@@ -17,7 +18,7 @@ class WalletService:
         wallet = Wallet(
             user_id=user.id,
             currency=wallet_in.currency,
-            balance=0.0
+            balance=Decimal("0.0")
         )
         await self.wallet_repo.create(wallet)
         await self.session.commit()
@@ -34,9 +35,9 @@ class WalletService:
             raise HTTPException(status_code=404, detail="Wallet not found")
         return wallet
 
-    async def deposit(self, wallet_id: uuid.UUID, user_id: uuid.UUID, amount: float) -> Wallet:
+    async def deposit(self, wallet_id: uuid.UUID, user_id: uuid.UUID, amount: Decimal) -> Wallet:
         wallet = await self.get_wallet(wallet_id, user_id)
         wallet.balance += amount
         await self.session.commit()
-        logger.info("funds_deposited", wallet_id=str(wallet_id), amount=amount)
+        logger.info("funds_deposited", wallet_id=str(wallet_id), amount=str(amount))
         return wallet

@@ -125,7 +125,7 @@ class TransferService:
             # 9. Commit
             await self.session.commit()
             
-            logger.info("transfer_completed", reference=transaction_ref, amount=float(transfer_in.amount))
+            logger.info("transfer_completed", reference=transaction_ref, amount=str(transfer_in.amount))
             return transaction
 
         except HTTPException:

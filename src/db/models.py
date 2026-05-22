@@ -28,7 +28,7 @@ class Wallet(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    balance: Mapped[float] = mapped_column(Numeric(20, 4), default=0.0, nullable=False)
+    balance: Mapped[Decimal] = mapped_column(Numeric(20, 4), default=Decimal("0.0"), nullable=False)
     currency: Mapped[str] = mapped_column(String(10), default="USD", nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -47,7 +47,7 @@ class Transaction(Base):
     transaction_reference: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
     source_wallet_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("wallets.id"), nullable=True)
     destination_wallet_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("wallets.id"), nullable=True)
-    amount: Mapped[float] = mapped_column(Numeric(20, 4), nullable=False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(20, 4), nullable=False)
     currency: Mapped[str] = mapped_column(String(10), nullable=False)
     status: Mapped[TransactionStatus] = mapped_column(String(20), default=TransactionStatus.PENDING, nullable=False)
     failure_reason: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
