@@ -1,0 +1,296 @@
+You are a senior backend engineer helping me build a realistic, production-oriented financial transaction backend project for my GitHub portfolio.
+
+The goal is NOT to create a basic CRUD banking demo. The repository should demonstrate:
+
+* backend engineering fundamentals
+* transactional consistency
+* concurrency handling
+* API security
+* observability
+* deployment readiness
+
+The project should look like something built by a strong backend engineer transitioning into scalable systems and AI infrastructure engineering.
+
+Use:
+
+* Python
+* FastAPI
+* PostgreSQL
+* Redis
+* Docker
+* SQLAlchemy
+* Alembic
+* JWT authentication
+
+========================
+PROJECT OVERVIEW
+================
+
+Project Name:
+financial-transaction-api
+
+Core Features:
+
+* wallet creation
+* wallet balance management
+* money transfers
+* transaction history
+* audit logging
+* authentication
+* rate limiting
+
+The project must prioritize:
+
+* transactional correctness
+* concurrency safety
+* reproducibility
+* backend reliability
+
+NOT:
+
+* flashy frontend
+* fake fintech buzzwords
+* unnecessary microservices
+
+========================
+DATABASE DESIGN
+===============
+
+Use PostgreSQL.
+
+Design normalized relational schemas for:
+
+* users
+* wallets
+* transactions
+* refresh tokens
+* audit logs
+
+Requirements:
+
+* ACID-compliant transaction handling
+* foreign key constraints
+* indexed lookup fields
+* idempotent transfer logic
+* optimistic or pessimistic locking strategy
+
+Implement:
+
+* transaction rollback safeguards
+* duplicate transfer prevention
+* atomic balance updates
+
+Document:
+
+* why transaction isolation matters
+* concurrency tradeoffs
+* race condition prevention
+
+========================
+API REQUIREMENTS
+================
+
+Build REST APIs using FastAPI.
+
+Endpoints:
+
+* /auth/register
+* /auth/login
+* /auth/refresh
+* /wallet/create
+* /wallet/balance
+* /wallet/transfer
+* /transactions/history
+* /health
+
+Requirements:
+
+* async endpoints where appropriate
+* Pydantic request/response models
+* input validation
+* centralized exception handling
+* pagination for transaction history
+* structured JSON responses
+
+========================
+AUTHENTICATION & SECURITY
+=========================
+
+Implement:
+
+* JWT access tokens
+* refresh token rotation
+* password hashing with bcrypt
+* request rate limiting
+* RBAC-ready structure
+* secure environment variable handling
+
+Add:
+
+* token expiry handling
+* invalid token detection
+* replay prevention logic
+
+Document security considerations:
+
+* brute force protection
+* token leakage risk
+* refresh token rotation rationale
+
+========================
+CONCURRENCY & RELIABILITY
+=========================
+
+This is VERY important.
+
+Implement realistic concurrency handling for:
+
+* simultaneous wallet transfers
+* duplicate requests
+* balance consistency
+
+Simulate:
+
+* concurrent transfer load testing
+* race-condition prevention
+
+Demonstrate:
+
+* transaction atomicity
+* rollback handling
+* consistency guarantees
+
+Generate realistic backend engineering discussions in documentation.
+
+========================
+OBSERVABILITY
+=============
+
+Implement:
+
+* structured JSON logging
+* request tracing
+* latency metrics
+* transaction audit logs
+
+Track:
+
+* request latency
+* failed transaction attempts
+* authentication failures
+* transfer completion timing
+
+Use:
+
+* middleware-based request timing
+* correlation/request IDs
+
+========================
+DOCKER & DEPLOYMENT
+===================
+
+Containerize the application using:
+
+* Docker
+* docker-compose
+
+Services:
+
+* FastAPI app
+* PostgreSQL
+* Redis
+
+Requirements:
+
+* reproducible local setup
+* environment-based config
+* health checks
+* startup dependency ordering
+
+========================
+TESTING
+=======
+
+Add:
+
+* pytest-based unit tests
+* API integration tests
+* concurrency tests
+* transaction rollback tests
+
+Test cases:
+
+* insufficient balance
+* concurrent transfers
+* expired JWT
+* duplicate requests
+* invalid refresh token
+
+========================
+README REQUIREMENTS
+===================
+
+Generate a strong README including:
+
+* architecture overview
+* schema explanation
+* transaction lifecycle
+* concurrency handling strategy
+* authentication flow
+* API examples
+* Docker setup
+* testing instructions
+* known limitations
+* future improvements
+
+Add Mermaid diagrams for:
+
+* request flow
+* database relationships
+* authentication flow
+
+========================
+CODE QUALITY
+============
+
+Requirements:
+
+* modular folder structure
+* type hints
+* clean architecture
+* realistic engineering comments
+* separation of concerns
+* service/repository layering
+
+Avoid:
+
+* giant monolithic app.py
+* tutorial-style code
+* fake enterprise complexity
+* overengineered microservices
+
+========================
+IMPORTANT
+=========
+
+The repository should feel like:
+
+* a serious backend engineering project
+* built by someone with practical production mindset
+
+NOT:
+
+* a beginner CRUD app
+* a copied tutorial
+* a fake “fintech platform”
+
+Prioritize:
+
+* consistency
+* correctness
+* concurrency handling
+* observability
+* engineering realism over unnecessary features.
+* Use comments in human tone
+* Commit after each milestone with commit messages that reflect real development practices, including feature branches, bug fixes, and documentation updates.
+* do not leave placeholder comments like "TODO: implement this" without providing a realistic implementation.
