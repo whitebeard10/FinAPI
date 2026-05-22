@@ -1,6 +1,7 @@
 import enum
 import uuid
 from datetime import datetime
+from decimal import Decimal
 from typing import Optional, Dict, Any
 
 from sqlalchemy import String, ForeignKey, Numeric, DateTime, JSON, Index, func
