@@ -1,7 +1,7 @@
 import uuid
 from typing import List
 from fastapi import APIRouter, Depends, status
-from src.api.schemas.wallet import WalletCreate, WalletResponse, WalletBalance
+from src.api.schemas.wallet import WalletCreate, WalletResponse, WalletBalance, WalletDeposit
 from src.api.schemas.transaction import TransferRequest, TransactionResponse, TransactionHistoryResponse
 from src.services.wallet import WalletService
 from src.services.transfer import TransferService
@@ -24,6 +24,11 @@ async def get_balance(wallet_id: uuid.UUID, db: DBDep, user: CurrentUser):
     wallet_service = WalletService(db)
     wallet = await wallet_service.get_wallet(wallet_id, user.id)
     return WalletBalance(balance=wallet.balance, currency=wallet.currency)
+
+@router.post("/{wallet_id}/deposit", response_model=WalletResponse)
+async def deposit_funds(wallet_id: uuid.UUID, deposit_in: WalletDeposit, db: DBDep, user: CurrentUser):
+    wallet_service = WalletService(db)
+    return await wallet_service.deposit(wallet_id, user.id, float(deposit_in.amount))
 
 @router.post("/{wallet_id}/transfer", response_model=TransactionResponse)
 async def transfer_money(wallet_id: uuid.UUID, transfer_in: TransferRequest, db: DBDep, user: CurrentUser):

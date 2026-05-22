@@ -33,3 +33,10 @@ class WalletService:
             from fastapi import HTTPException
             raise HTTPException(status_code=404, detail="Wallet not found")
         return wallet
+
+    async def deposit(self, wallet_id: uuid.UUID, user_id: uuid.UUID, amount: float) -> Wallet:
+        wallet = await self.get_wallet(wallet_id, user_id)
+        wallet.balance += amount
+        await self.session.commit()
+        logger.info("funds_deposited", wallet_id=str(wallet_id), amount=amount)
+        return wallet

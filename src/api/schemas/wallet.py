@@ -19,3 +19,6 @@ class WalletResponse(BaseModel):
 class WalletBalance(BaseModel):
     balance: Decimal
     currency: str
+
+class WalletDeposit(BaseModel):
+    amount: Decimal = Field(..., gt=0)
