@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.middleware import LoggingMiddleware
 from src.core.config import settings
@@ -15,6 +16,14 @@ app = FastAPI(
     version=settings.VERSION,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    logger.error("validation_error", path=request.url.path, errors=exc.errors())
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"detail": exc.errors()},
+    )
 
 # Set all CORS enabled origins
 if settings.BACKEND_CORS_ORIGINS:
