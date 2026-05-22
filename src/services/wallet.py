@@ -39,5 +39,6 @@ class WalletService:
         wallet = await self.get_wallet(wallet_id, user_id)
         wallet.balance += amount
         await self.session.commit()
+        await self.session.refresh(wallet)
         logger.info("funds_deposited", wallet_id=str(wallet_id), amount=str(amount))
         return wallet

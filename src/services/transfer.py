@@ -124,6 +124,7 @@ class TransferService:
             
             # 9. Commit
             await self.session.commit()
+            await self.session.refresh(transaction)
             
             logger.info("transfer_completed", reference=transaction_ref, amount=str(transfer_in.amount))
             return transaction

@@ -10,7 +10,7 @@ async def get_auth_header(client: AsyncClient, email: str):
         json={"email": email, "password": "password123"}
     )
     response = await client.post(
-        "/api/v1/auth/login",
+        "/api/v1/auth/login-json",
         json={"email": email, "password": "password123"}
     )
     token = response.json()["access_token"]
@@ -135,3 +135,53 @@ async def test_concurrent_transfers(client: AsyncClient, db_session):
     # Verify final balance is 500.0
     balance_res = await client.get(f"/api/v1/wallet/{source_id}/balance", headers=headers)
     assert float(balance_res.json()["balance"]) == 500.0
+
+@pytest.mark.asyncio
+async def test_wallet_deposit(client: AsyncClient, db_session):
+    headers = await get_auth_header(client, "deposit@example.com")
+    res = await client.post("/api/v1/wallet/create", json={"currency": "USD"}, headers=headers)
+    wallet_id = res.json()["id"]
+    
+    # Deposit 500
+    deposit_res = await client.post(
+        f"/api/v1/wallet/{wallet_id}/deposit",
+        json={"amount": 500.0},
+        headers=headers
+    )
+    assert deposit_res.status_code == 200
+    assert float(deposit_res.json()["balance"]) == 500.0
+    
+    # Verify balance endpoint
+    balance_res = await client.get(f"/api/v1/wallet/{wallet_id}/balance", headers=headers)
+    assert float(balance_res.json()["balance"]) == 500.0
+
+@pytest.mark.asyncio
+async def test_transaction_history(client: AsyncClient, db_session):
+    headers = await get_auth_header(client, "history@example.com")
+    res1 = await client.post("/api/v1/wallet/create", json={"currency": "USD"}, headers=headers)
+    source_id = res1.json()["id"]
+    
+    # Add balance
+    await client.post(f"/api/v1/wallet/{source_id}/deposit", json={"amount": 1000.0}, headers=headers)
+    
+    res2 = await client.post("/api/v1/wallet/create", json={"currency": "USD"}, headers=headers)
+    dest_id = res2.json()["id"]
+    
+    # Make 3 transfers
+    for i in range(3):
+        await client.post(
+            f"/api/v1/wallet/{source_id}/transfer",
+            json={
+                "destination_wallet_id": dest_id,
+                "amount": 10.0,
+                "idempotency_key": f"history-key-{i}"
+            },
+            headers=headers
+        )
+    
+    # Check history
+    history_res = await client.get("/api/v1/transactions/history", headers=headers)
+    assert history_res.status_code == 200
+    data = history_res.json()
+    assert data["total"] == 3
+    assert len(data["items"]) == 3
